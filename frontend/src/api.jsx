@@ -5,11 +5,17 @@ import { createContext, useContext, useState } from 'react'
 export const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'
 const STORAGE_KEY = 'placematch_auth'
 
-export async function apiRequest(path, options) {
-  const response = await fetch(`${API_BASE_URL}${path}`, {
-    headers: { 'Content-Type': 'application/json', ...options.headers },
-    ...options,
-  })
+export async function apiRequest(path, options = {}) {
+  let response
+  try {
+    response = await fetch(`${API_BASE_URL}${path}`, {
+      headers: { 'Content-Type': 'application/json', ...options.headers },
+      ...options,
+    })
+  } catch {
+    throw new Error('Unable to connect to the backend server. Please try again later or verify the API server is running.')
+  }
+
   const data = await response.json().catch(() => ({}))
   if (!response.ok) throw new Error(data.detail || 'Something went wrong. Please try again.')
   return data

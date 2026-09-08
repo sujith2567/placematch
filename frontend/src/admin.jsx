@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, NavLink, useParams } from 'react-router-dom'
-import { apiRequest, useAuth } from './api.jsx'
+import { apiRequest, useAuth, API_BASE_URL } from './api.jsx'
 
 // ----- helpers --------------------------------------------------------------
 
@@ -170,7 +170,7 @@ function UploadResumeModal({ onClose, onSuccess }) {
         raw_text: form.raw_text
       })
 
-      const baseUrl = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'
+      const baseUrl = API_BASE_URL
       const res = await fetch(`${baseUrl}/api/v1/students/upload-resume?${params.toString()}`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${auth.token}` },
@@ -1051,7 +1051,7 @@ function SectionBulkUploadModal({ sectionId, sectionName, onClose, onSuccess }) 
     try {
       const formData = new FormData()
       formData.append('file', file)
-      const baseUrl = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'
+      const baseUrl = API_BASE_URL
       const res = await fetch(`${baseUrl}/api/v1/sections/${sectionId}/bulk-upload`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${auth.token}` },
@@ -1350,7 +1350,7 @@ function SectionSingleUploadModal({ sectionId, sectionName, onClose, onSuccess }
         ...paramsExtra
       })
 
-      const baseUrl = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'
+      const baseUrl = API_BASE_URL
       const res = await fetch(`${baseUrl}/api/v1/sections/${sectionId}/upload-resume?${params.toString()}`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${auth.token}` },
@@ -1647,7 +1647,7 @@ export function AdminSectionsPage() {
     if (isRecruiter) return
     if (!window.confirm(`Delete section "${name}"? Students will be unassigned (not deleted).`)) return
     try {
-      const baseUrl = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'
+      const baseUrl = API_BASE_URL
       const res = await fetch(`${baseUrl}/api/v1/sections/${id}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${auth.token}` },

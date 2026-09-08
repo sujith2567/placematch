@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
-import { apiRequest, useAuth } from './api.jsx'
+import { apiRequest, useAuth, API_BASE_URL } from './api.jsx'
 import { StatCard, LoadingBlock, ErrorBlock, EmptyState, formatPercent, formatCgpa } from './components.jsx'
 
 export function StudentSubNav() {
@@ -883,8 +883,8 @@ export function StudentExplainabilityChatbot() {
       })
       setMessages(prev => [...prev, { sender: 'bot', text: data.answer }])
     } catch (err) {
-      const errMsg = err.message === 'Failed to fetch' 
-        ? 'Cannot connect to backend server. Please verify FastAPI is running at http://127.0.0.1:8000.'
+      const errMsg = (err.message === 'Failed to fetch' || err.message.includes('fetch'))
+        ? `Cannot connect to backend server. Please verify the API server is running at ${API_BASE_URL}.`
         : err.message
       setMessages(prev => [...prev, { sender: 'bot', text: `Sorry, couldn't fetch explanation answer: ${errMsg}` }])
     } finally {
